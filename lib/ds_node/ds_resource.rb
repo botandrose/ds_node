@@ -28,6 +28,7 @@ module DSNode
     module ClassMethods
       def ds_resource name, options = {}
         path = options.delete(:path) || ""
+        should_validate = options.fetch(:validate, true)
 
         belongs_to name, options.reverse_merge({
           class_name: "DSNode::Resource",
@@ -42,7 +43,7 @@ module DSNode
 
         writer_accessor = :"#{name}_file"
         attr_accessor writer_accessor
-        validates writer_accessor, recognized_file_type: true
+        validates writer_accessor, recognized_file_type: true if should_validate
 
         destroy_accessor = :"destroy_#{name}"
         attr_accessor destroy_accessor
