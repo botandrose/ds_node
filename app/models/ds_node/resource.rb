@@ -50,6 +50,10 @@ module DSNode
       media_type == "v"
     end
 
+    def audio?
+      media_type == "a"
+    end
+
     def needs_processing?
       false
     end
@@ -87,7 +91,12 @@ module DSNode
     end
 
     def set_type
-      type_letter = mime_type.raw_media_type == "video" ? "v" : "i"
+      type_letter = case mime_type.raw_media_type
+      when "video" then "v"
+      when "image" then "i"
+      when "audio" then "a"
+      else "d"
+      end
       self.media_type= type_letter
     end
 
@@ -101,7 +110,7 @@ module DSNode
         self.width = video_metadata[/ID_VIDEO_WIDTH=(\d+)/].split("=").last
         self.height = video_metadata[/ID_VIDEO_HEIGHT=(\d+)/].split("=").last
         self.duration = video_metadata[/ID_LENGTH=([0-9.]+)/].split("=").last
-      else
+      elsif image?
         command = "identify -format '%w %h' #{new_file.path} 2>&1"
         dimensions = `#{command}`.split(" ")
         self.width, self.height = dimensions
