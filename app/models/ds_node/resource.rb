@@ -37,6 +37,10 @@ module DSNode
     def full_path
       File.join "public", file_path
     end
+
+    def url
+      file_path
+    end
    
     def image?
       media_type == "i"

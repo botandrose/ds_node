@@ -35,6 +35,11 @@ module DSNode
           required: false,
         })
 
+        inquirer_accessor = :"#{name}?"
+        define_method inquirer_accessor do
+          send(name).present?
+        end
+
         writer_accessor = :"#{name}_file"
         attr_accessor writer_accessor
         validates writer_accessor, recognized_file_type: true
