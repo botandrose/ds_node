@@ -86,7 +86,7 @@ module DSNode
     end
 
     def set_mime_type
-      mime_type_array = `file -ib "#{new_file.path}"`.chomp.split("; ")
+      mime_type_array = `file -ibL "#{new_file.path}"`.chomp.split("; ")
       self.mime_type = MIME::Type.new(mime_type_array)
     end
 
