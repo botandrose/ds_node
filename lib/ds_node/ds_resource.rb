@@ -48,6 +48,9 @@ module DSNode
         destroy_accessor = :"destroy_#{name}"
         attr_accessor destroy_accessor
 
+        remove_accessor = :"remove_#{name}"
+        attr_accessor remove_accessor
+
         after_save do
           if file = send(writer_accessor)
             send :"build_#{name}", path: path, file: file
@@ -61,6 +64,14 @@ module DSNode
             send(name).try(:destroy)
             send :"#{name}=", nil
             send :"#{destroy_accessor}=", nil
+            save
+          end
+        end
+
+        after_save do
+          if send(remove_accessor).to_i == 1
+            send :"#{name}=", nil
+            send :"#{remove_accessor}=", nil
             save
           end
         end
@@ -104,7 +115,9 @@ module DSNode
           class_name: "DSNode::Resource",
         })
 
-        attr_accessor :"new_#{single_name}_files", :"destroy_#{single_name}_ids"
+        attr_accessor :"new_#{single_name}_files"
+        attr_accessor :"destroy_#{single_name}_ids"
+        attr_accessor :"remove_#{single_name}_ids"
 
         before_save do
           if send(:"new_#{single_name}_files").present?
@@ -119,11 +132,21 @@ module DSNode
         before_save do
           if send(:"destroy_#{single_name}_ids").present?
             (send(:"destroy_#{single_name}_ids") || []).map(&:to_i).each do |id|
+              send :"#{single_name}_ids=", send(:"#{single_name}_ids") - [id]
               raise PreventDestroyLast if prevent_destroy_last && send(name).count == 1
               DSNode::Resource.destroy(id)
-              send :"#{single_name}_ids=", send(:"#{single_name}_ids") - [id]
             end
             send :"destroy_#{single_name}_ids=", nil
+          end
+        end
+
+        before_save do
+          if send(:"remove_#{single_name}_ids").present?
+            (send(:"remove_#{single_name}_ids") || []).map(&:to_i).each do |id|
+              send :"#{single_name}_ids=", send(:"#{single_name}_ids") - [id]
+              raise PreventDestroyLast if prevent_destroy_last && send(name).count == 0
+            end
+            send :"remove_#{single_name}_ids=", nil
           end
         end
       end
