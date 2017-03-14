@@ -77,20 +77,22 @@ module DSNode
         attr_accessor :"new_#{single_name}_files", :"destroy_#{single_name}_ids"
 
         after_save do
-          return unless send(:"new_#{single_name}_files").present?
-          Array(send(:"new_#{single_name}_files")).each do |file|
-            send(name).create! file: file
+          if send(:"new_#{single_name}_files").present?
+            Array(send(:"new_#{single_name}_files")).each do |file|
+              send(name).create! file: file
+            end
+            send :"new_#{single_name}_files=", nil
           end
-          send :"new_#{single_name}_files=", nil
         end
 
         after_save do
-          return unless send(:"destroy_#{single_name}_ids").present?
-          (send(:"destroy_#{single_name}_ids") || []).each do |id|
-            raise PreventDestroyLast if prevent_destroy_last && send(name).count == 1
-            send(name).destroy(id)
+          if send(:"destroy_#{single_name}_ids").present?
+            (send(:"destroy_#{single_name}_ids") || []).each do |id|
+              raise PreventDestroyLast if prevent_destroy_last && send(name).count == 1
+              send(name).destroy(id)
+            end
+            send :"destroy_#{single_name}_ids=", nil
           end
-          send :"destroy_#{single_name}_ids=", nil
         end
       end
     end
