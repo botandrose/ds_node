@@ -95,6 +95,38 @@ module DSNode
           end
         end
       end
+
+      def belongs_to_many_ds_resources name, options = {}
+        single_name = options.key?(:single_name) ? options.delete(:single_name) : name.to_s.singularize.to_sym
+        prevent_destroy_last = options.key?(:prevent_destroy_last) ? options.delete(:prevent_destroy_last) : false
+
+        belongs_to_many name, options.reverse_merge({
+          class_name: "DSNode::Resource",
+        })
+
+        attr_accessor :"new_#{single_name}_files", :"destroy_#{single_name}_ids"
+
+        before_save do
+          if send(:"new_#{single_name}_files").present?
+            resources = Array(send(:"new_#{single_name}_files")).map do |file|
+              DSNode::Resource.create! file: file
+            end
+            send :"#{name}=", resources
+            send :"new_#{single_name}_files=", nil
+          end
+        end
+
+        before_save do
+          if send(:"destroy_#{single_name}_ids").present?
+            (send(:"destroy_#{single_name}_ids") || []).map(&:to_i).each do |id|
+              raise PreventDestroyLast if prevent_destroy_last && send(name).count == 1
+              DSNode::Resource.destroy(id)
+              send :"#{single_name}_ids=", send(:"#{single_name}_ids") - [id]
+            end
+            send :"destroy_#{single_name}_ids=", nil
+          end
+        end
+      end
     end
 
     private
