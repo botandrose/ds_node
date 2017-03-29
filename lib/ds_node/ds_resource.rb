@@ -121,10 +121,10 @@ module DSNode
 
         before_save do
           if send(:"new_#{single_name}_files").present?
-            resources = Array(send(:"new_#{single_name}_files")).map do |file|
+            new_resources = Array(send(:"new_#{single_name}_files")).map do |file|
               DSNode::Resource.create! file: file
             end
-            send :"#{name}=", resources
+            send :"#{name}=", send(name) + new_resources
             send :"new_#{single_name}_files=", nil
           end
         end
