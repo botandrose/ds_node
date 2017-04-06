@@ -7,7 +7,7 @@ class CreateResources < ActiveRecord::Migration[5.0]
       t.integer  "resourcesheight", default: 0
       t.string   "resourcesfilename"
       t.string   "resourcesoriginalfilename"
-      t.string   "resourcespath"
+      t.string   "resourcespath", default: "resources/"
       t.integer  "resourcesthumbid"
       t.string   "resourceshash"
       t.integer  "resourcesparentid", default: 0

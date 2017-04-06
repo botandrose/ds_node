@@ -27,7 +27,6 @@ module DSNode
 
     module ClassMethods
       def ds_resource name, options = {}
-        path = options.delete(:path) || ""
         should_validate = options.fetch(:validate, true)
 
         belongs_to name, options.reverse_merge({
@@ -53,7 +52,7 @@ module DSNode
 
         after_save do
           if file = send(writer_accessor)
-            send :"build_#{name}", path: path, file: file
+            send :"build_#{name}", file: file
             send :"#{writer_accessor}=", nil
             save
           end

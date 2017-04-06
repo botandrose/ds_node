@@ -31,7 +31,7 @@ module DSNode
     end
 
     def file_path
-      File.join "/assets/resources", path, file_name
+      File.join "/assets", path, file_name
     end
 
     def full_path
@@ -126,7 +126,7 @@ module DSNode
 
     def copy_file
       self.file_name = "#{SecureRandom.uuid}.#{extension}"
-      folder = File.join("public/assets/resources", path)
+      folder = File.join("public/assets", path)
       FileUtils.mkdir_p folder
       FileUtils.cp new_file.path, full_path unless new_file.path == full_path
       File.chmod 0644, full_path
