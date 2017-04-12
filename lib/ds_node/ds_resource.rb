@@ -31,7 +31,6 @@ module DSNode
 
         belongs_to name, options.reverse_merge({
           class_name: "DSNode::Resource",
-          dependent: :destroy,
           required: false,
         })
 
