@@ -54,6 +54,10 @@ module DSNode
       media_type == "a"
     end
 
+    def pdf?
+      media_type == "p"
+    end
+
     def needs_processing?
       false
     end
@@ -95,7 +99,8 @@ module DSNode
       when "video" then "v"
       when "image" then "i"
       when "audio" then "a"
-      else "d"
+      else
+        mime_type == "application/pdf" ? "p" : "d"
       end
       self.media_type= type_letter
     end
