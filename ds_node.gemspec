@@ -21,9 +21,11 @@ Gem::Specification.new do |spec|
   spec.require_paths = ["lib"]
 
   spec.add_dependency "activerecord"
+  spec.add_dependency "mime-types"
 
   spec.add_development_dependency "bundler", "~> 1.14"
   spec.add_development_dependency "rake", "~> 10.0"
   spec.add_development_dependency "rspec", "~> 3.0"
-  spec.add_development_dependency "rails"
+  spec.add_development_dependency "database_cleaner"
+  spec.add_development_dependency "sqlite3"
 end

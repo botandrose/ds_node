@@ -1,5 +1,8 @@
 require "bundler/setup"
 require "ds_node"
+require "byebug"
+
+$: << "./app/models"
 
 RSpec.configure do |config|
   # Enable flags like --only-failures and --next-failure
