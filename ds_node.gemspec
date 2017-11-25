@@ -21,6 +21,7 @@ Gem::Specification.new do |spec|
   spec.require_paths = ["lib"]
 
   spec.add_dependency "activerecord"
+  spec.add_dependency "active_record-json_associations"
   spec.add_dependency "mime-types"
 
   spec.add_development_dependency "bundler", "~> 1.14"
