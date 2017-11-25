@@ -1,4 +1,5 @@
 require "active_record"
+require "active_record/json_associations"
 
 module DSNode
   module DSResource
