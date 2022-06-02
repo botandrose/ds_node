@@ -30,7 +30,7 @@ module DSNode
       def ds_resource name, options = {}
         should_validate = options.fetch(:validate, true)
 
-        belongs_to name, options.reverse_merge({
+        belongs_to name, **options.reverse_merge({
           class_name: "DSNode::Resource",
           required: false,
         })
@@ -110,7 +110,7 @@ module DSNode
         single_name = options.key?(:single_name) ? options.delete(:single_name) : name.to_s.singularize.to_sym
         prevent_destroy_last = options.key?(:prevent_destroy_last) ? options.delete(:prevent_destroy_last) : false
 
-        belongs_to_many name, options.reverse_merge({
+        belongs_to_many name, **options.reverse_merge({
           class_name: "DSNode::Resource",
         })
 
